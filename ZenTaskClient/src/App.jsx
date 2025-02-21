@@ -1,10 +1,8 @@
-import './App.css'
-
 function App() {
 
   return (
-    <div>
-      <h1>ZenTask</h1>
+    <div className="text-center mt-6">
+      <h1 className="text-4xl font-bold">ZenTask</h1>
       <p>Task Management System</p>
     </div>
   )
