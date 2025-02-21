@@ -31,10 +31,15 @@ const client = new MongoClient(uri, {
     },
 })
 
+const client2 = new MongoClient(uri)
+
 async function run() {
     try {
         const userCollection = client.db("ZenAction").collection("Users");
         const taskCollection = client.db("ZenAction").collection("Tasks");
+
+        // const taskCollection2 = client2.db("ZenAction").collection("Tasks");
+        // const userCollection2 = client2.db("ZenAction").collection("Users");
 
         app.post('/users', async (req, res) => {
             // const user = req.body;
@@ -47,6 +52,18 @@ async function run() {
             const result = await userCollection.insertOne({ ...query, role: 'donor', status: 'active' });
             res.send(result);
         });
+
+
+        app.get('/tasks', async (req, res) => {
+            const tasks = await taskCollection.find({}).toArray();
+            let data = {};
+            data['To-Do'] = [...tasks.filter((task) => task.category === 'To-Do')];
+            data['In Progress'] = [...tasks.filter((task) => task.category === 'In Progress')];
+            data['Done'] = [...tasks.filter((task) => task.category === 'Done')];
+            res.send(data);
+        });
+
+                                    
 
         // task post on db
         app.post('/tasks', async (req, res) => {
