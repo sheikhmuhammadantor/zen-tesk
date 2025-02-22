@@ -37,15 +37,16 @@ async function run() {
         const taskCollection = client.db("ZenAction").collection("Tasks");
 
         app.post('/users', async (req, res) => {
-            // const user = req.body;
-            // const query = { email: user.email }
-            const query = { email: req.query.email }
+            const user = req.body;
+            const query = { email: user.email }
+            // const query = { email: req.query.email }
             const existingUser = await userCollection.findOne(query);
             if (existingUser) {
                 return res.send({ message: 'user already exists', insertedId: null })
             }
-            const result = await userCollection.insertOne({ ...query, role: 'donor', status: 'active' });
-            res.send(result);
+            const result = await userCollection.insertOne({ ...user });
+            console.log(result);
+            res.send('result');
         });
 
         app.get('/tasks', async (req, res) => {

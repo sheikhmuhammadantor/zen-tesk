@@ -4,12 +4,14 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
+import useAxiosPublic from "../../hooks/useAxiosPublic";
 
 const RegistrationForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location?.state?.from?.pathname || '/';
     const { user, loading, setLoading, createUser } = useAuth();
+    const axiosPublic = useAxiosPublic();
     const [formData, setFormData] = useState({
         email: "",
         name: "",
@@ -40,14 +42,15 @@ const RegistrationForm = () => {
             await createUser(formData.email, formData.password);
 
             // eslint-disable-next-line no-unused-vars
-            const { password, confirmPassword, ...safeFormData } = formData;
-            const res = await axios.post(`${import.meta.env.VITE_API_URL}/users`, safeFormData);
+            const { confirmPassword, ...safeFormData } = formData;
+            const res = await axiosPublic.post(`/users`, safeFormData);
 
-            navigate(from, { replace: true })
+            // navigate(from, { replace: true })
             if (res.data.insertedId) toast.success("Registration successful!");
         } catch (error) {
             console.error("Registration failed:", error);
-        } finally{setLoading(false)};
+            toast.error('Something Want Wrong, Try Again !');
+        } finally { setLoading(false) };
     };
 
     return (

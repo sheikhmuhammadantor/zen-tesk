@@ -16,7 +16,7 @@ const auth = getAuth(app)
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(true);
 
   const createUser = (email, password) => {
     setLoading(true)
@@ -29,7 +29,6 @@ const AuthProvider = ({ children }) => {
   }
 
   const logOut = async () => {
-    localStorage.removeItem('access-token');
     setLoading(true)
     return signOut(auth)
   }
@@ -46,6 +45,8 @@ const AuthProvider = ({ children }) => {
       console.log('user -', currentUser)
       if (currentUser?.email) {
         setUser(currentUser)
+      } else {
+        setUser(null);
       }
       setLoading(false)
     })

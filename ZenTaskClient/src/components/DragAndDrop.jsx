@@ -2,12 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import useAxiosPublic from "../hooks/useAxiosPublic";
 import Swal from 'sweetalert2';
+import useAuth from "../hooks/useAuth";
+import LoadingSpinner from "./shared/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 function DragAndDrop() {
     const dragItem = useRef();
     const dragContainer = useRef();
     const axiosPublic = useAxiosPublic();
     const [data, setData] = useState({});
+    const { logOut, loading } = useAuth();
+    const navigate = useNavigate();
 
 
     const { data: response = [], refetch } = useQuery({
@@ -15,7 +20,6 @@ function DragAndDrop() {
         queryFn: async () => {
             const { data } = await axiosPublic('/tasks');
 
-            console.log(response);
             setData(data);
 
             return data;
@@ -36,8 +40,14 @@ function DragAndDrop() {
         e.preventDefault();
     };
 
-    const handleDelete = async (id) => {
+    const handelLogout = () => {
+        logOut()
+            .then(res => console.log(res))
+            .catch(err => console.log(err))
+        navigate('/login')
+    }
 
+    const handleDelete = async (id) => {
         const confirm = await Swal.fire({
             title: "Confirm Delete",
             text: "Are you sure you want to Delete This Task?",
@@ -57,14 +67,6 @@ function DragAndDrop() {
                 console.error("Error Delete Task:", error);
             }
         }
-
-        // try {
-        //     const deletedTask = await axiosPublic.delete(`/tasks-delete/${id}`);
-        //     console.log(deletedTask);
-        //     refetch();
-        // } catch (error) {
-        //     console.log(error);
-        // }
     };
 
     const handleEdit = async (item) => {
@@ -100,9 +102,13 @@ function DragAndDrop() {
             console.log(error);
         }
     };
+
+    // if (!user) return <Navigate to='/login' state={{ from: location }} replace='true' />
+    if (loading) return <LoadingSpinner />
+    
     return (
         <section className="container mx-auto px-4">
-            <h1 className="text-center text-4xl font-bold my-4">KanBan Board</h1>
+            <h1 className="text-center text-4xl font-bold my-4 flex justify-center items-center">KanBan Board <span><button onClick={handelLogout} className="btn ml-6">LogOut</button></span></h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-8 my-10">
                 {Object.keys(data)?.map((container, index) => {
                     return (
