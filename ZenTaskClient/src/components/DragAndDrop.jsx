@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import useAxiosPublic from "../hooks/useAxiosPublic";
+import Swal from 'sweetalert2';
 
-// eslint-disable-next-line react/prop-types
 function DragAndDrop() {
     const dragItem = useRef();
     const dragContainer = useRef();
@@ -14,8 +14,9 @@ function DragAndDrop() {
         queryKey: ["tasks"],
         queryFn: async () => {
             const { data } = await axiosPublic('/tasks');
+
+            console.log(response);
             setData(data);
-            console.log(data);
 
             return data;
         },
@@ -35,15 +36,36 @@ function DragAndDrop() {
         e.preventDefault();
     };
 
-    // const handleDelete = async (id) => {
-    //     try {
-    //         const deletedTask = await axiosPublic.delete(`/tasks/${id}`);
-    //         console.log(deletedTask);
-    //         refetch();
-    //     } catch (error) {
-    //         console.log(error);
-    //     }
-    // };
+    const handleDelete = async (id) => {
+
+        const confirm = await Swal.fire({
+            title: "Confirm Delete",
+            text: "Are you sure you want to Delete This Task?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Confirm Delete",
+        });
+
+        if (confirm.isConfirmed) {
+            try {
+                const deletedTask = await axiosPublic.delete(`/tasks-delete/${id}`);
+                console.log(deletedTask);
+                refetch();
+                Swal.fire("Success", "Delete The Task!", "success");
+            } catch (error) {
+                Swal.fire("Error", "Failed to confirm Delete.", "error");
+                console.error("Error Delete Task:", error);
+            }
+        }
+
+        // try {
+        //     const deletedTask = await axiosPublic.delete(`/tasks-delete/${id}`);
+        //     console.log(deletedTask);
+        //     refetch();
+        // } catch (error) {
+        //     console.log(error);
+        // }
+    };
 
     const handleEdit = async (item) => {
         document.getElementById(item._id).showModal();
@@ -106,7 +128,7 @@ function DragAndDrop() {
                                         </div>
                                         <div className="flex gap-2 justify-center items-center cursor-pointer mt-4">
                                             <button onClick={() => handleEdit(item)} className="btn btn-sm">Edit</button>
-                                            <button onClick={0} className="btn btn-sm">Delete</button>
+                                            <button onClick={() => handleDelete(item._id)} className="btn btn-sm">Delete</button>
                                             <div>
                                                 <dialog id={item._id} className="modal">
                                                     <div className="modal-box">
