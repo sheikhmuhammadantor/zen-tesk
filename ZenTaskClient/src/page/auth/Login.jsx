@@ -1,7 +1,7 @@
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
-// import LoadingSpinner from '../../components/Shared/LoadingSpinner'
+import LoadingSpinner from '../../components/shared/LoadingSpinner'
 
 const Login = () => {
   const { signIn, user, loading, setLoading } = useAuth()
@@ -10,8 +10,7 @@ const Login = () => {
   const from = location?.state?.from?.pathname || '/'
 
   if (user) return <Navigate to={from} replace={true} />
-//   if (loading) return <LoadingSpinner />
-  if (loading) return ;
+  if (loading) return <LoadingSpinner />
 
   const handleSubmit = async event => {
     event.preventDefault()

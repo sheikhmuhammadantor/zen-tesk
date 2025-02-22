@@ -3,11 +3,13 @@ import { createBrowserRouter } from 'react-router-dom'
 // import App from '../App'
 import DragAndDrop from '../components/DragAndDrop'
 import Login from '../page/auth/Login'
+import ErrorPage from '../page/ErrorPage'
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <DragAndDrop />
+    element: <DragAndDrop />,
+    errorElement: <ErrorPage />
   },
   {
     path: '/login',
