@@ -31,15 +31,10 @@ const client = new MongoClient(uri, {
     },
 })
 
-const client2 = new MongoClient(uri)
-
 async function run() {
     try {
         const userCollection = client.db("ZenAction").collection("Users");
         const taskCollection = client.db("ZenAction").collection("Tasks");
-
-        // const taskCollection2 = client2.db("ZenAction").collection("Tasks");
-        // const userCollection2 = client2.db("ZenAction").collection("Users");
 
         app.post('/users', async (req, res) => {
             // const user = req.body;
@@ -60,7 +55,7 @@ async function run() {
             data['In Progress'] = [...tasks.filter((task) => task.category === 'In Progress')];
             data['Done'] = [...tasks.filter((task) => task.category === 'Done')];
             res.send(data);
-        });                      
+        });
 
         // task post on db
         app.post('/tasks', async (req, res) => {
@@ -77,10 +72,7 @@ async function run() {
             const update = { $set: { category } };
             const result = await taskCollection.updateOne(query, update);
 
-            // console.log(id, category);
             console.log(result);
-
-            // res.send(result);
             res.send('result');
         });
 
@@ -93,11 +85,8 @@ async function run() {
             const result = await taskCollection.updateOne(query, update);
 
             console.log(result);
-
             res.send('result');
         });
-
-
 
     } finally {
         // Ensures that the client will close when you finish/error

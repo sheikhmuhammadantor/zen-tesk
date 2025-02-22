@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import useAxiosPublic from "../hooks/useAxiosPublic";
-// import Swal from "sweetalert2";
-
 
 // eslint-disable-next-line react/prop-types
 function DragAndDrop() {
@@ -22,10 +20,6 @@ function DragAndDrop() {
             return data;
         },
     });
-
-
-    // console.log('test', data);
-
 
     const handleDragStart = (e, item, container) => {
         dragItem.current = item;
@@ -53,48 +47,17 @@ function DragAndDrop() {
 
     const handleEdit = async (item) => {
         document.getElementById(item._id).showModal();
-        const { _id: id, title, description } = item;
-        console.log(item);
-
-
-
-        // try {
-        //     const editedTask = await axiosPublic.put(`/tasks/${id}`);
-        //     console.log(editedTask);
-        //     refetch();
-        // }
-        // catch (error) {
-        //     console.log(error);
-        // }
     };
-
-    // function closeModal() {
-    //     document.getElementById("my_modal_1").checked = false;
-    //   }
-
-
-    // const handelSave = async (e) => {
-    //     e.preventDefault();
-    //     // closeModal();
-    //     // document.getElementById("my_modal_1").close();
-    // }
-
-
 
     const handelSubmit = async (e, id) => {
         e.preventDefault();
         const form = e.target;
-        console.log(form.title);
-        console.log(id);
 
         const title = form.title.value;
         const description = form.description.value;
         const category = form.category.value;
 
-        console.log({title, description, category});
-        // closeModal()
         document.getElementById(id).close();
-        // document.getElementById('my_modal_1').classList.remove('open-modal')
 
         try {
             const editedTask = await axiosPublic.put(`/task-update/${id}`, { title, description, category });
@@ -108,30 +71,12 @@ function DragAndDrop() {
 
     const handleDrop = async (e, targetContainer) => {
         const item = dragItem.current;
-        // console.log(item);
-        // const sourceContainer = dragContainer.current;
-
-        // update task category by id
         try {
-            const updatedTask = await axiosPublic.put(`/tasks/${item._id}`, { category: targetContainer });
-            console.log(updatedTask);
+            await axiosPublic.put(`/tasks/${item._id}`, { category: targetContainer });
             refetch();
         } catch (error) {
             console.log(error);
         }
-
-
-        // function closeModal() {
-        //     document.getElementById("my-modal").checked = false;
-        //   }
-
-        // setData((prev) => {
-        //     const newData = { ...prev };
-        //     newData[sourceContainer] = newData[sourceContainer].filter((i) => i !== item);
-        //     newData[targetContainer] = [...newData[targetContainer], item];
-
-        //     return newData;
-        // });
     };
     return (
         <section className="container mx-auto px-4">
@@ -162,11 +107,7 @@ function DragAndDrop() {
                                         <div className="flex gap-2 justify-center items-center cursor-pointer mt-4">
                                             <button onClick={() => handleEdit(item)} className="btn btn-sm">Edit</button>
                                             <button onClick={0} className="btn btn-sm">Delete</button>
-
-
                                             <div>
-                                                {/* Open the modal using document.getElementById('ID').showModal() method */}
-                                                {/* <button className="btn" onClick={() => document.getElementById('my_modal_1').showModal()}>open modal</button> */}
                                                 <dialog id={item._id} className="modal">
                                                     <div className="modal-box">
                                                         <form onSubmit={(e) => handelSubmit(e, item._id)} className=" space-y-1">
@@ -201,21 +142,10 @@ function DragAndDrop() {
                                                                 </select>
                                                             </div>
                                                             <button type="submit" className="btn">Save</button>
-
-
                                                         </form>
-                                                        {/* <div className="modal-action"> */}
-                                                        {/* <form method="dialog" className="w-full flex justify-center gap-4"> */}
-                                                        {/* if there is a button in form, it will close the modal */}
-                                                        {/* <button onClick={handelSave} className="btn">Save</button>
-                                                                <button className="btn">Cancel</button> */}
-                                                        {/* </form> */}
-                                                        {/* </div> */}
                                                     </div>
                                                 </dialog>
                                             </div>
-
-
                                         </div>
                                     </div>
                                 );
