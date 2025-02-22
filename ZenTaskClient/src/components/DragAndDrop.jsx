@@ -11,15 +11,15 @@ function DragAndDrop() {
     const dragContainer = useRef();
     const axiosPublic = useAxiosPublic();
     const [data, setData] = useState({});
-    const { logOut, loading } = useAuth();
+    const { logOut, loading, user } = useAuth();
     const navigate = useNavigate();
 
 
+    // eslint-disable-next-line no-unused-vars
     const { data: response = [], refetch } = useQuery({
         queryKey: ["tasks"],
         queryFn: async () => {
-            const { data } = await axiosPublic('/tasks');
-
+            const { data } = await axiosPublic(`/tasks/${user.email}`);
             setData(data);
 
             return data;
@@ -105,7 +105,7 @@ function DragAndDrop() {
 
     // if (!user) return <Navigate to='/login' state={{ from: location }} replace='true' />
     if (loading) return <LoadingSpinner />
-    
+
     return (
         <section className="container mx-auto px-4">
             <h1 className="text-center text-4xl font-bold my-4 flex justify-center items-center">KanBan Board <span><button onClick={handelLogout} className="btn ml-6">LogOut</button></span></h1>

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import useAuth from "../../hooks/useAuth";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../components/shared/LoadingSpinner";
@@ -45,7 +44,7 @@ const RegistrationForm = () => {
             const { confirmPassword, ...safeFormData } = formData;
             const res = await axiosPublic.post(`/users`, safeFormData);
 
-            // navigate(from, { replace: true })
+            navigate(from, { replace: true })
             if (res.data.insertedId) toast.success("Registration successful!");
         } catch (error) {
             console.error("Registration failed:", error);

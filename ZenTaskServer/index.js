@@ -49,8 +49,10 @@ async function run() {
             res.send('result');
         });
 
-        app.get('/tasks', async (req, res) => {
-            const tasks = await taskCollection.find({}).toArray();
+        app.get('/tasks/:email', async (req, res) => {
+            const { email } = req.params;
+            const query = { email: email }
+            const tasks = await taskCollection.find(query).toArray();
             let data = {};
             data['To-Do'] = [...tasks.filter((task) => task.category === 'To-Do')];
             data['In Progress'] = [...tasks.filter((task) => task.category === 'In Progress')];
