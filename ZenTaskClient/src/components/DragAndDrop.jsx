@@ -11,7 +11,7 @@ function DragAndDrop() {
 
 
     const [data, setData] = useState({});
-    const { data: response = [] } = useQuery({
+    const { data: response = [], refetch } = useQuery({
         queryKey: ["tasks"],
         queryFn: async () => {
             const { data } = await axiosPublic('/tasks');
@@ -23,7 +23,7 @@ function DragAndDrop() {
     });
 
 
-    console.log('test', data);
+    // console.log('test', data);
 
 
     const handleDragStart = (e, item, container) => {
@@ -40,14 +40,25 @@ function DragAndDrop() {
         e.preventDefault();
     };
 
-    const handleDrop = (e, targetContainer) => {
+    const handleDrop = async (e, targetContainer) => {
         const item = dragItem.current;
-        console.log(item);
+        // console.log(item);
         const sourceContainer = dragContainer.current;
+
+        // update task category by id
+        try {
+            const updatedTask = await axiosPublic.put(`/tasks/${item._id}`, { category: targetContainer });
+            console.log(updatedTask);
+            refetch();
+        } catch (error) {
+            console.log(error);
+        }
+
         setData((prev) => {
             const newData = { ...prev };
             newData[sourceContainer] = newData[sourceContainer].filter((i) => i !== item);
             newData[targetContainer] = [...newData[targetContainer], item];
+
             return newData;
         });
     };

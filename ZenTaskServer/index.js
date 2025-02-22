@@ -53,7 +53,6 @@ async function run() {
             res.send(result);
         });
 
-
         app.get('/tasks', async (req, res) => {
             const tasks = await taskCollection.find({}).toArray();
             let data = {};
@@ -61,15 +60,28 @@ async function run() {
             data['In Progress'] = [...tasks.filter((task) => task.category === 'In Progress')];
             data['Done'] = [...tasks.filter((task) => task.category === 'Done')];
             res.send(data);
-        });
-
-                                    
+        });                      
 
         // task post on db
         app.post('/tasks', async (req, res) => {
             const task = req.body;
             const result = await taskCollection.insertOne(task);
             res.send(result);
+        });
+
+        // update task category by id
+        app.put('/tasks/:id', async (req, res) => {
+            const { id } = req.params;
+            const { category } = req.body;
+            const query = { _id: new ObjectId(id) };
+            const update = { $set: { category } };
+            const result = await taskCollection.updateOne(query, update);
+
+            // console.log(id, category);
+            console.log(result);
+
+            // res.send(result);
+            res.send('result');
         });
 
     } finally {
