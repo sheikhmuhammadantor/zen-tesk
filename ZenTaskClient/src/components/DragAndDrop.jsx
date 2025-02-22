@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "./shared/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import AddTask from "./task/AddTask";
 
 function DragAndDrop() {
     const dragItem = useRef();
@@ -109,6 +110,9 @@ function DragAndDrop() {
     return (
         <section className="container mx-auto px-4">
             <h1 className="text-center text-4xl font-bold my-4 flex justify-center items-center">KanBan Board <span><button onClick={handelLogout} className="btn ml-6">LogOut</button></span></h1>
+            <div>
+                <AddTask />
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-center gap-8 my-10">
                 {Object.keys(data)?.map((container, index) => {
                     return (
