@@ -8,7 +8,6 @@ import {
   updateProfile,
 } from 'firebase/auth'
 import { app } from '../firebase/firebase.config'
-// import axios from 'axios'
 import PropTypes from 'prop-types'
 
 // eslint-disable-next-line react-refresh/only-export-components
@@ -45,20 +44,9 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async currentUser => {
       console.log('user -', currentUser)
-      // if (currentUser?.email) {
-      //   setUser(currentUser)
-
-      //   const res = await axios.post(
-      //     `${import.meta.env.VITE_API_URL}/jwt`, { email: currentUser?.email, }
-      //   )
-
-      //   if (res?.data.token) {
-      //     localStorage.setItem('access-token', res?.data.token)
-      //   }
-      // } else {
-      //   setUser(currentUser)
-      //   await axios.get(`${import.meta.env.VITE_API_URL}/logout`)
-      // }
+      if (currentUser?.email) {
+        setUser(currentUser)
+      }
       setLoading(false)
     })
     return () => {
